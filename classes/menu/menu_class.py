@@ -1,35 +1,35 @@
 from typing import Callable
 from rich.console import Console
-
 from tabulate import tabulate
 
 
 class Menu:
     def __init__(self) -> None:
-        self.terminal_console = Console()
-        self.menu_headers: list[str] = []
-        self.menu_data: list[list[str]] = []
 
-        
+        self.printing_console = Console()
+        self.tuppel_data: list[tuple[str, list[str]]] = []
+
+        self.header_data: list[str] = []
+        self.body_data: list[list[str]] = []
+
+    def combind_data_to_tubulate_data(self) -> dict[str, list[str]]:
+        return {
+            header_element: self.body_data[index]
+            for index, header_element in enumerate(self.header_data)
+        }
+
+    def set_header_data(self, input_headers_data: list[str]) -> None:
+        self.header_data = input_headers_data
+
+    def set_body_data(self, intput_body_data: list[list[str]]) -> None:
+        self.body_data = intput_body_data
+
     def printing_menu(self) -> None:
 
-        menu_dict_data = self.format_data(self.menu_data, self.menu_headers)
-
-        self.terminal_console.print(
-            tabulate(tabular_data=menu_dict_data, tablefmt="keys")
+        tabulate_data: dict[str, list[str]] = self.combind_data_to_tubulate_data()
+        self.printing_console.print(
+            tabulate(tabulate_data, headers="keys", tablefmt="heavy_grid")
         )
-
-    def format_data(self, data: list[list[str]], headers: list[str]) -> dict[str, str]:
-        raise NotImplementedError
-
-    def set_menu_headers(self, headers: list[str]) -> None:
-        self.menu_headers = headers
-
-    def set_menu_data(self, data: list[list[str]]) -> None:
-        self.menu_data = data
-
-    def get_menu_options() -> Callable[[]]:
-        raise NotImplementedError
 
 
 """ 
@@ -41,38 +41,29 @@ ________________________
 | QUESTION 3 | KOMAND 3|
 | QUESTION 4 | KOMAND 4|
 |____________|_________|
-
-data = {
-    QUESTIONS: [
-        "QUESTION 1", 
-        "QUESTION 2", 
-        "QUESTION 3", 
-        "QUESTION 4", 
-    ],
-    COMAND: [
-        "KOMAND 1",
-        "KOMAND 2",
-        "KOMAND 3",
-        "KOMAND 4",
-    ]
-    
-}
-
-headers = ["QUESTIONS", "COMAND"]
-data = [
-    [
-        "QUESTION 1", 
-        "QUESTION 2", 
-        "QUESTION 3", 
-        "QUESTION 4", 
-    ],
-    [
-        "COMAND 1",
-        "COMAND 2",
-        "COMAND 3",
-        "COMAND 4",
-    ]
-    ]
-
-
 """
+
+
+if __name__ == "__main__":
+    menuPrinter = Menu()
+    menuPrinter.set_body_data(
+        [
+            [
+                "QUESTION 1",
+                "QUESTION 2",
+                "QUESTION 3",
+                "QUESTION 4",
+            ],
+            [
+                "KOMAND 1",
+                "KOMAND 2",
+                "KOMAND 3",
+                "KOMAND 4",
+            ],
+        ]
+    )
+    menuPrinter.set_header_data(["QUESTIONS", "COMAND"])
+
+    menuPrinter.printing_menu()
+
+    # menuPrinter.printing_menu()
